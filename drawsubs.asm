@@ -1,4 +1,4 @@
-
+.if 0
 THICKTP	= 
 THICKBT	= 
 THICKLT	=
@@ -18,28 +18,47 @@ SYM0600	= ; 5/8 @T
 SYM0630	= 
 SYM0700	=
 SYM0730	=
-
+.endif
 dsymloc	= dsymlda + 1		;static char* dsymloc;
 drawloc	= dlocsta + 1		;static char* drawloc;
 attrloc	= alocsta + 1		;static char* attrloc;
 
-symsets	.byte (32*4) ; static const symsets[4][25] = { {
+symset .byte $30,$30,$30,$30,$30;static const symset[4][25] = { {
+       .byte $30,$30,$30,$30,$30;
+       .byte $30,$30,$30,$30,$30;
+       .byte $30,$30,$30,$30,$30;
+       .byte $30,$30,$30,$30,$30;
 	.byte	0,0,0,0,0,0,0	;
+       .byte $31,$31,$31,$31,$31;
+       .byte $31,$31,$31,$31,$31;
+       .byte $31,$31,$31,$31,$31;
+       .byte $31,$31,$31,$31,$31;
+       .byte $31,$31,$31,$31,$31;
 	.byte	0,0,0,0,0,0,0	;
+       .byte $32,$32,$32,$32,$32;
+       .byte $32,$32,$32,$32,$32;
+       .byte $32,$32,$32,$32,$32;
+       .byte $32,$32,$32,$32,$32;
+       .byte $32,$32,$32,$32,$32;
 	.byte	0,0,0,0,0,0,0	;
-	.byte	0,0,0,0;,0,0,0	;
-count5i	.byte			;void drawtil(register uint8_t a) {
-count5j	.byte			; static uint8_t count5i, count5j;
-attrcod	.byte			; static char attrcod;
+       .byte $33,$33,$33,$33,$33;
+       .byte $33,$33,$33,$33,$33;
+       .byte $33,$33,$33,$33,$33;
+       .byte $33,$33,$33,$33,$33;
+       .byte $33,$33,$33,$33,$33;
+	;.byte	0,0,0,0,0,0,0	;};
+count5i	.fill	1		;void drawtil(register uint8_t a) {
+count5j	.fill	1		; static uint8_t count5i, count5j;
+attrcod	.fill	1		; static char attrcod;
 drawtil	sta	attrcod		;
 	lsr			;
 	and	#$60		;
 	clc			;
-	adc	#<symsets	;
+	adc	#<symset	;
 	sta	dsymloc		;
-	lda	#>symsets	;
+	lda	#>symset	;
 	adc	#0		;
-	sta	1+dsymloc	; dsymloc = symsets[a>>6]; // tile type 0~3,
+	sta	1+dsymloc	; dsymloc = symset[a>>6]; // tile type 0~3,
 	lda	attrcod		;
 	and	#$3f		;
 	sta	attrcod		; attrcod = a & 0x3f; // tile attribute (color)
@@ -79,7 +98,7 @@ dlocsta	sta	$ffff		;   *drawloc++ = *dsymloc++;
 	bne	--		; }
 	rts			;} // drawtil()
 
-ydiv4x5	.byte			;extern uint8_t state[16];
+ydiv4x5	.fill	1		;extern uint8_t state[16];
 drawcol	tya			;void drawcol(register uint8_t& y) { // 0|4|8|12
 	and	#$0c		;
 	sta	ydiv4x5		;
@@ -96,11 +115,11 @@ drawcol	tya			;void drawcol(register uint8_t& y) { // 0|4|8|12
 	sta	1+drawloc	; drawloc = (char*) (SCREENM + (y / 4) * 5);
 	lda	ydiv4x5		;
 	;clc			;
-	adc	#<COLORM	;
+	adc	#<SCREENC	;
 	sta	attrloc		;
-	lda	#>COLORM	;
+	lda	#>SCREENC	;
 	;adc	#0
-	sta	1+attrloc	; attrloc = (char*) (COLORM + (y / 4) * 5);
+	sta	1+attrloc	; attrloc = (char*) (SCREENC + (y / 4) * 5);
 -	lda	state,y		; do {
 	jsr	drawtil		;  register uint8_t a = state[y]);
 	iny			;  drawtil(a);
