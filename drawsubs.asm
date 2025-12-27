@@ -1,8 +1,8 @@
 
-THICKTP
-THICKBT
-THICKLT	
-THICKRT
+THICKTP	= 
+THICKBT	= 
+THICKLT	=
+THICKRT	=
 
 SYM1200	= THICKBT		; 5/8 @B
 SYM1230	= ; 1/4 @BL
@@ -19,21 +19,19 @@ SYM0630	=
 SYM0700	=
 SYM0730	=
 
-drawall	ldy	#0		;void drawall(void) { // redraw entire state
-dnxtcol	jsr	drawcol		; for (register uint8_t y = 0; y < 16; y++) {
-	cpy	#$10		;  drawcol(y);
-	bcc	dnxtcol		; }
-	rts			;} // drawall()
-
 dsymloc	= dsymlda + 1		;static char* dsymloc;
-drawloc = dlocsta + 1		;static char* drawloc;
-attrloc = alocsta + 1		;static char* attrloc;
+drawloc	= dlocsta + 1		;static char* drawloc;
+attrloc	= alocsta + 1		;static char* attrloc;
 
+symsets	.byte (32*4) ; static const symsets[4][25] = { {
+	.byte	0,0,0,0,0,0,0	;
+	.byte	0,0,0,0,0,0,0	;
+	.byte	0,0,0,0,0,0,0	;
+	.byte	0,0,0,0;,0,0,0	;
 count5i	.byte			;void drawtil(register uint8_t a) {
 count5j	.byte			; static uint8_t count5i, count5j;
-symsets	.byte (32*4) ; static const symsets[4][25] = { {
-drawcod	.byte			;
-drawtil	sta	drawcod		; static char drawcod = a;
+attrcod	.byte			; static char attrcod;
+drawtil	sta	attrcod		;
 	lsr			;
 	and	#$60		;
 	clc			;
@@ -42,15 +40,15 @@ drawtil	sta	drawcod		; static char drawcod = a;
 	lda	#>symsets	;
 	adc	#0		;
 	sta	1+dsymloc	; dsymloc = symsets[a>>6]; // tile type 0~3,
-	lda	drawcod		;
+	lda	attrcod		;
 	and	#$3f		;
-	sta	drawcod		; drawcod = a & 0x3f; // tile attribute (color)
+	sta	attrcod		; attrcod = a & 0x3f; // tile attribute (color)
 	lda	#5		;
 	sta	count5i		; for (count5i = 5; count5i; count5i--) {
 -	lda	#5		;
 	sta	count5j		;  for (count5j = 5; count5j; count5j--) {
--	lda	drawcod		;
-alocsta	sta	$ffff		;   *attrloc++ = drawcod;
+-	lda	attrcod		;
+alocsta	sta	$ffff		;   *attrloc++ = attrcod;
 	inc	alocsta+1	;
 	bne	dsymlda		;
 	inc	alocsta+2	;
@@ -80,41 +78,39 @@ dlocsta	sta	$ffff		;   *drawloc++ = *dsymloc++;
 	dec	count5i		;
 	bne	--		; }
 	rts			;} // drawtil()
-	
+
 ydiv4x5	.byte			;extern uint8_t state[16];
-drawcol	lda	#<SCREENM	;void drawcol(register uint8_t y) { // 0|4|8|12
-	sta	drawloc		;
-	lda	#>SCREENM	;
-	sta	1+drawloc	; drawloc = (char*) SCREENM;
-	lda	#<COLORM	;
-	sta	attrloc		;
-	lda	#>COLORM	;
-	sta	1+attrloc	; attrloc = (char*) COLORM;
-	tya			;
+drawcol	tya			;void drawcol(register uint8_t& y) { // 0|4|8|12
 	and	#$0c		;
 	sta	ydiv4x5		;
 	lsr			;
 	lsr			;
 	clc			;
 	adc	ydiv4x5		;
-	sta	ydiv4x5		; static ydiv4x5 = (y / 4) * 5;
-	adc	drawloc		;
-	sta	drawloc		; drawloc += ydiv4x5; // screen col 0|5|10|15
-	;lda	1+drawloc
+	sta	ydiv4x5		; static uint8_t ydiv4x5 = (y/4)*5; // 0|5|10|15
+	;clc
+	adc	#<SCREENM	;
+	sta	drawloc		;
+	lda	#>SCREENM	;
 	;adc	#0
-	;sta	1+drawloc
+	sta	1+drawloc	; drawloc = (char*) (SCREENM + (y / 4) * 5);
 	lda	ydiv4x5		;
-	clc			;
-	adc	attrloc		;
-	sta	attrloc		; attrloc += ydiv4x5; // color col 0|5|10|15
-	;lda	1+attrloc
+	;clc			;
+	adc	#<COLORM	;
+	sta	attrloc		;
+	lda	#>COLORM	;
 	;adc	#0
-	;sta	1+attrloc
-dnxtrow	lda	state,y		; do {
-	jsr	drawtil		;  drawtil(register uint8_t a = state[y]);
-	iny			;
+	sta	1+attrloc	; attrloc = (char*) (COLORM + (y / 4) * 5);
+-	lda	state,y		; do {
+	jsr	drawtil		;  register uint8_t a = state[y]);
+	iny			;  drawtil(a);
 	tya			;
 	and	#$03		;
-	bne	dnxtrow		; } while (++y & 0x03); // end of column
+	bne	-		; } while (++y & 0x03); // y @top of next column
 	rts			;} // drawcol()
 
+drawall	ldy	#0		;void drawall(void) { // redraw whole game state
+-	jsr	drawcol		; register uint5_t y = 0;
+	cpy	#$10		; while (y <= 15)
+	bcc	-		;  drawcol(y);
+	rts			;} // drawall()
