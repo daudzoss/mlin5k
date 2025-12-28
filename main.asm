@@ -33,15 +33,17 @@ COPIED2	= $0400
 	.text	$11,$11,$11,$11
 	.text	$11,$11,$11,$11
 	.text	$11,$11,$11,$11
-topline	.text	$12,"(",$92,","
+topline	.text	$9c,$12,"(",$92,","
 	.text	$12,")",$92,"top "
 	.text	$12,"<",$92,","
 	.text	$12,">",$92,"bot "
 	.text	$12,"i",$92,","
 	.text	$12,"k",$92,"slide"
-.if SCREENW >= $27
-	.text	" daudzoss/mlin5k"
+.if SCREENW != $16
+	.text	$0d,$0d
 .endif
+	.text	$1f,"github:"
+	.text	"daudzoss/mlin5k"
 	.text	$22,$3b		; ";
 	.text	$3a,$9e		; : SYS main
 	.null	format("%4d",main)

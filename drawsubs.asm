@@ -1,24 +1,42 @@
-.if 0
-THICKTP	= 
-THICKBT	= 
-THICKLT	=
-THICKRT	=
+INV	= $80
+THINTP	= $63
+THINBT	= $64
+THINLT	= $65
+THINRT	= $67
+THICKTP	= $77
+THICKBT	= $6f
+THICKLT	= $74
+THICKRT	= $6a
+POINTTL	= $69
+POINTTR	= $5f	
+POINTBL	= INV|POINTTR
+POINTBR	= INV|POINTTL
+CORNRTL	= $7e
+CORNRTR	= $7c
+CORNRBL	= $7b
+CORNRBR	= $6c
 
-SYM1200	= THICKBT		; 5/8 @B
-SYM1230	= ; 1/4 @BL
-SYM0100	= ; 1/2 @TR
-SYM0130	= ; /8 @L
-SYM0200	= ; 6/8 @L
-SYM0300	= ; 7/8 @R
-SYM0400	= SYM0200; 6/8 @L
-SYM0430	= SYM0130; /8 @L
-SYM0500	= ; 1/2 @TL
-SYM0530	= ; 1/4 @TL
-SYM0600	= ; 5/8 @T
-SYM0630	= 
-SYM0700	=
-SYM0730	=
-.endif
+SYM1200	= INV|THICKTP
+SYM1230	= CORNRBL
+SYM0100	= POINTTR
+SYM0130	= CORNRBL
+SYM0200	= INV|THICKRT
+SYM0300	= INV|THINLT
+SYM0400	= SYM0200
+SYM0430	= CORNRTL
+SYM0500	= POINTBR
+SYM0530	= CORNRTL
+SYM0600	= INV|THICKBT
+SYM0630	= CORNRTR
+SYM0700	= POINTBL
+SYM0730	= CORNRTR
+SYM0800	= INV|THICKLT	
+SYM0900	= INV|THINRT
+SYM1000	= SYM0800
+SYM1030 = CORNRBR
+SYM1100	= POINTTL
+SYM1130	= CORNRBR	
+
 dsymloc	= dsymlda + 1		;static char* dsymloc;
 drawloc	= dlocsta + 1		;static char* drawloc;
 attrloc	= alocsta + 1		;static char* attrloc;
@@ -31,23 +49,63 @@ symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
        .byte $20,$20,$20,$20,$20;
        .byte $20,$20,$20,$20,$20;
 	.byte	0,0,0,0,0,0,0	;
-       .byte $31,$31,$31,$31,$31;
-       .byte $31,$31,$31,$31,$31;
-       .byte $31,$31,$31,$31,$31;
-       .byte $31,$31,$31,$31,$31;
-       .byte $31,$31,$31,$31,$31;
+
+
+	.byte	SYM0900,$20,$20	;
+	.byte	$20,SYM0300	;
+	
+	.byte	SYM0800,SYM1130	;
+	.byte	SYM1200,SYM1230	;
+	.byte	SYM0400		;
+	
+	.byte	SYM1030,SYM1100	;
+	.byte	$20,SYM0500	;
+	.byte	SYM0430		;
+
+	.byte	SYM1000,SYM0630	;
+	.byte	SYM0600,SYM0530	;
+	.byte	SYM0200		;
+
+	.byte	SYM0900,$20,$20	;
+	.byte	$20,SYM0300	;
 	.byte	0,0,0,0,0,0,0	;
-       .byte $32,$32,$32,$32,$32;
-       .byte $32,$32,$32,$32,$32;
-       .byte $32,$32,$32,$32,$32;
-       .byte $32,$32,$32,$32,$32;
-       .byte $32,$32,$32,$32,$32;
+	
+
+	.byte	$20,$20,$20,$20	;
+	.byte	$20		;
+
+	.byte	$20,SYM1130	;
+	.byte	SYM1200,SYM1230	;
+	.byte	$20		;
+
+	.byte	SYM1030,SYM1100	;
+	.byte	$20,SYM0100	;
+	.byte	SYM0130		;
+
+	.byte	SYM1000,$20,$20	;
+	.byte	$20,SYM0200	;
+
+	.byte	SYM0900,$20,$20	;
+	.byte	$20,SYM0300	;
 	.byte	0,0,0,0,0,0,0	;
-       .byte $33,$33,$33,$33,$33;
-       .byte $33,$33,$33,$33,$33;
-       .byte $33,$33,$33,$33,$33;
-       .byte $33,$33,$33,$33,$33;
-       .byte $33,$33,$33,$33,$33;
+	
+
+	.byte	SYM0900,$20,$20	;
+	.byte	$20,SYM0300	;
+
+	.byte	SYM0800,$20,$20	;
+	.byte	$20,SYM0400	;
+
+	.byte	SYM0730,SYM0700	;
+	.byte	$20,SYM0500	;
+	.byte	SYM0430		;
+
+	.byte	$20,SYM0630	;
+	.byte	SYM0600,SYM0530	;
+	.byte	$20
+
+	.byte	$20,$20,$20,$20	;
+	.byte	$20
 	;.byte	0,0,0,0,0,0,0	;};
 count5i	.fill	1		;void drawtil(register uint8_t a) {
 count5j	.fill	1		; static uint8_t count5i, count5j;
