@@ -1,4 +1,4 @@
-MISSING	= 0<<6
+NOTLINK	= 0<<6
 MIDLINK = 1<<6
 TOPLINK = 2<<6
 BOTLINK = 3<<6
@@ -70,8 +70,7 @@ start
 
 .include "movesubs.asm"
 
-missing	.byte	0		;
-state	.byte	MISSING		;static uint8_t state[16] = { MISSING,
+state	.byte	NOTLINK		;static uint8_t state[16] = { NOTLINK,
 	.byte	TOPLINK|WHT	;                             TOPLINK|WHT,
 	.byte	MIDLINK|WHT	;                             MIDLINK|WHT,
 	.byte	BOTLINK|WHT	;                             BOTLINK|WHT,

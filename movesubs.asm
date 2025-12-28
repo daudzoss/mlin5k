@@ -1,4 +1,37 @@
-rndmove	
+missing	.byte	0		;static uint4_t missing = 0;
+
+.align	16
+
+jumpto0	.word	allleft
+jumpto1	.word	allrght
+jumpto2	.word	slideup
+jumpto3	.word	slidedn
+jumpto4	.word	topleft
+jumpto5	.word	toprght
+jumpto6	.word	botleft
+jumpto7	.word	botrght
+
+jumpvec	.word	jumpto0
+
+rndmove	lda	jumpvec		;void rndmove(void) {
+	and	#$f0		;
+	sta	jumpvec		;
+	lda	RNDLOC1		;
+	eor	RNDLOC2		;
+	and	#$0e		;
+	ora	jumpvec		;
+	sta	jumpvec		;
+rndjump	jmp	(jumpvec)	;} // rndmove()
+
+allleft	rts
+allrght	rts
+slideup	rts
+slidedn	rts
+topleft	rts
+toprght	rts
+botleft	rts
+botrght	rts
+
 getmove	jsr	$ffe4		;void getmove(void) {
 	beq	getmove		; switch (register char a = getchar()) {
 
