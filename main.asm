@@ -26,8 +26,8 @@ COPIED2	= $0400
 .endif
 	.word	(+), 2055
 	.text	$99,$22,$1f,$09	; PRINT " CHR(31) CHR$(9) // BLU,enable
-	.text	$8e,$08,$93,$13	; CHR$(142) CHR$(8) CHR$(19) // UPPER,disabl,clr
-	.text	$13,$11		; second home undoes windows on C16, C128....
+	.text	$8e,$08,$93	; CHR$(142) CHR$(8) CHR$(19) // UPPER,disabl,clr
+	.text	$13,$13,$11	; second home undoes windows on C16, C128....
 	.text	$11,$11,$11,$11
 	.text	$11,$11,$11,$11
 	.text	$11,$11,$11,$11
@@ -42,7 +42,7 @@ topline	.text	$12,"(",$92,","
 .if SCREENW >= $27
 	.text	" daudzoss/mlin5k"
 .endif
-	.text	$22		; "
+	.text	$22,$3b		; ";
 	.text	$3a,$9e		; : SYS main
 	.null	format("%4d",main)
 +	.word 0

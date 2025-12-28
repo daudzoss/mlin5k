@@ -23,6 +23,8 @@ dsymloc	= dsymlda + 1		;static char* dsymloc;
 drawloc	= dlocsta + 1		;static char* drawloc;
 attrloc	= alocsta + 1		;static char* attrloc;
 
+
+bit5h
 symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
        .byte $20,$20,$20,$20,$20;
        .byte $20,$20,$20,$20,$20;
@@ -50,7 +52,7 @@ symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
 count5i	.fill	1		;void drawtil(register uint8_t a) {
 count5j	.fill	1		; static uint8_t count5i, count5j;
 attrcod	.fill	1		; static char attrcod;
-NORZSET	= 	drawtil+4	;
+bits76h	= 	drawtil+4	;
 drawtil	sta	attrcod		;
 	and	#$c0		; static const norzset = 0xc0;
 	lsr			;
@@ -65,11 +67,14 @@ drawtil	sta	attrcod		;
 -	lda	#5		;
 	sta	count5j		;  for (count5j = 5; count5j; count5j--) {
 -	lda	attrcod		;
-	bit	NORZSET		;
-	beq	+		;   if (attrcod & 0xc0) // not the MISSING tile,
-	and	#$3f		;	
-alocsta	sta	$ffff		;    *attrloc++ = attrcod & 0x3f; // set a color
-+	inc	alocsta+1	;
+	bit	bits76h		;
+	beq	+		;   if (attrcod & 0xc0) { // not a MISSING tile
+	and	#$3f		;    attrcod &= 0x3f; // just the color in low 6
+	bit	bit5h		;
+	beq	alocsta		;    if (attrcod & 0x20) // for c16, sign-extend
+	ora	#$40		;     attrcod |= 0x40; // into low 7 bits
+alocsta	sta	$ffff		;    *attrloc++ = attrcod; // do tile foreground
++	inc	alocsta+1	;   }
 	bne	dsymlda		;
 	inc	alocsta+2	;
 dsymlda	lda	$ffff		;
