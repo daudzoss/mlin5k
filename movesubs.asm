@@ -1,5 +1,5 @@
 missing	.byte	0		;static int4_t missing = 0;
-
+randnum	.byte	$55		;statig int8_t randnum = 0xbf;
 jumpvec	.fill	2		;static uint8_t (*jumpvec)(void);
 .align	16
 jumpto0	.word	allleft		;static uint8_t (*jumpto)(void)[8] = { allleft,
@@ -12,12 +12,21 @@ jumpto6	.word	botleft		;                                      botleft,
 jumpto7	.word	botrght		;                                      botrght};
 rndmove	lda	RNDLOC1		;uint8_t rndmove(void) {
 	eor	RNDLOC2		;
+	asl			;
+	eor	randnum		;
+	sta	randnum		;
+	lsr			;
+	lsr			;
+	lsr			;
+	eor	randnum		;
 	and	#$0e		;
+	sta	randnum		;
 	tay			; register uint3_t y = rand(8);
 	lda	jumpto0,y	;
 	sta	jumpvec		;
 	lda	jumpto0+1,y	; jumpvec = jumpto[y];
 	sta	jumpvec+1	; return (*jumpvec)();
+.if 0
  tya
  lsr
  ora #$30
@@ -25,6 +34,7 @@ rndmove	lda	RNDLOC1		;uint8_t rndmove(void) {
 - jsr $ffe4
  cmp SCREENM
  bne -
+.endif
 	jmp	(jumpvec)	;} // rndmove()
 
 shuffle	ldy	#<$100		;void shuffle(void) {
@@ -49,9 +59,8 @@ downby1	lda	state+0		;uint4_t downby1(void) {
 	lda	#$ff		;
 	clc			;
 	adc	missing		;
-	bpl	+		; if (--missing < 0)
-	lda	#$0f		;  missing = 15;
-+	sta	missing		; return missing & 0x7f;
+	and	#$0f		;
+	sta	missing		; return missing = (missing - 1) & 0x0f;
 	rts			;} // downby1()
 upby1	lda	state+$0f	;uint4_t upby1(void) {
 	sta	state-1		; state[-1] = state[15]; // tempbot
@@ -63,10 +72,8 @@ upby1	lda	state+$0f	;uint4_t upby1(void) {
 	lda	#1		;
 	clc			;
 	adc	missing		;
-	cmp	#$10		;
-	bcc	+		; if (++missing > 15)
-	lda	#0		;  missing = 0;
-+	sta	missing		; return missing & 0x7f;
+	and	#$0f		;
+	sta	missing		; return missing = (missing + 1) & 0x0f;
 	rts			;} // upby1()
 
 allleft	jsr	downby1		;uint4_t allleft(void) { register uint4_t a;
@@ -171,14 +178,14 @@ botleft	lda	state+3		;uint4_t botleft(void) {
 +	rts			;} // botleft()
 botrght	lda	state+$f	;uint4_t botrght(void) {
 	pha			; uint8_t temp = state[15];
-	lda	state+3		;
-	sta	state+$f	; state[15] = state[3];
-	lda	state+7		;
-	sta	state+3		; state[3] = state[7];
 	lda	state+$b	;
-	sta	state+7		; state[7] = state[11];
+	sta	state+$f	; state[15] = state[11];
+	lda	state+7		;
+	sta	state+$b	; state[11] = state[7];
+	lda	state+3		;
+	sta	state+7		; state[7] = state[3];
 	pla			;
-	sta	state+$b	; state[11] = temp;
+	sta	state+3		; state[3] = temp;
 	lda	missing		;
 	and	#3		;
 	cmp	#3		;
@@ -195,7 +202,7 @@ botrght	lda	state+$f	;uint4_t botrght(void) {
 getmove	jsr	$ffe4		;int8_t getmove(void) {
 	beq	getmove		; switch (register char a = getchar()) {
 
-.if 0
+.if 1
 	cmp	#'['		; case '[':
 	beq	+		;
 	cmp	#':'		; case ':':
