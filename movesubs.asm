@@ -92,12 +92,13 @@ topleft	lda	state+0		;uint4_t topleft(void) {
 	lda	missing		;
 	bit	rowmask		;
 	bne	+		; if (missing & rowmask == 0) {// missing in top
-	clc			;  missing -= 4;
-	adc	#$fc		;  if (missing < 0)
-	bpl	+		;   missing = 12;
-	lda	#$0c		; }
-+	sta	missing		; return missing;
-	rts			;} // topleft()
+;;; codedupl
+	clc			;   missing -= 4;
+	adc	#$fc		;   missing &= 0x0f; // 0xfc becomes 0x0c
+	and	#$0f		; }
+	sta	missing		; return missing;
+;;; codedupl
++	rts			;} // topleft()
 toprght	lda	state+$c	;uint4_t toprght(void) {
 	pha			; uint8_t temp = state[12];
 	lda	state+8		;
@@ -111,16 +112,57 @@ toprght	lda	state+$c	;uint4_t toprght(void) {
 	lda	missing		;
 	bit	rowmask		;
 	bne	+		; if (missing & rowmask == 0) {// missing in top
-	clc			;
-	adc	#4		;  missing += 4;
-	cmp	#$10		;  if (missing > 15)
-	bcc	+		;   missing = 0;
-	lda	#0		; }
-+	sta	missing		; return missing;
-	rts			;} // topright()
-
-botleft	rts
-botrght	rts
+;;; codedupl
+	clc			;  missing += 4;
+	adc	#4		;  missing &= 0x0f; // 0x13 becomes 0x03
+	and	#$0f		; }
+	sta	missing		; return missing;
+;;; codedupl
++	rts			;} // topright()
+botleft	lda	state+3		;uint4_t botleft(void) {
+	pha			; uint8_t temp = state[3];
+	lda	state+7		;
+	sta	state+3		; state[3] = state[7];
+	lda	state+$b	;
+	sta	state+7		; state[7] = state[11];
+	lda	state+$f	;
+	sta	state+$b	; state[11] = state[15];
+	pla			;
+	sta	state+$f	; state[15] = temp;
+	lda	missing		;
+	and	#3;rowmask	;
+	cmp	#3;rowmask	;
+	bne	+		; if (missing & rowmask == 3) {// missing in bot
+	lda	missing		;
+;;; codedupl
+	clc			;  missing -= 4;
+	adc	#$fc		;  missing &= 0x0f; // 0xff becomes 0x0f
+	and	#$0f		; }
+	sta	missing		; return missing;
+;;; codedupl
++	rts			;} // botleft()
+botrght	lda	state+$f	;uint4_t botrght(void) {
+	pha			; uint8_t temp = state[15];
+	lda	state+3		;
+	sta	state+$f	; state[15] = state[3];
+	lda	state+7		;
+	sta	state+3		; state[3] = state[7];
+	lda	state+$b	;
+	sta	state+7		; state[7] = state[11];
+	pla			;
+	sta	state+$b	; state[11] = temp;
+	lda	missing		;
+	and	#3		;
+	cmp	#3		;
+	bne	+		; if (missing & rowmask == 3) {// missing in bot
+	lda	missing		;
+;;; codedupl
+	clc			;  missing += 4;
+	adc	#4		;  missing &= 0x0f;
+	and	#$0f		; }
+	sta	missing		; return missing;
+;;; codedupl
++	rts			;} // botrght()
 
 getmove	jsr	$ffe4		;void getmove(void) {
 	beq	getmove		; switch (register char a = getchar()) {
