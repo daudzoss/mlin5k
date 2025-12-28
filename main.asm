@@ -67,32 +67,36 @@ COPIED2	= $0400
 
 start
 .include "drawsubs.asm"
-state	.byte	MISSING
-	.byte	TOPLINK|WHT
-	.byte	MIDLINK|WHT
-	.byte	BOTLINK|WHT
-	.byte	TOPLINK|RED
-	.byte	MIDLINK|RED
-	.byte	MIDLINK|RED
-	.byte	BOTLINK|RED
-	.byte	TOPLINK|YEL
-	.byte	MIDLINK|YEL
-	.byte	MIDLINK|YEL
-	.byte	BOTLINK|YEL
-	.byte	TOPLINK|GRN
-	.byte	MIDLINK|GRN
-	.byte	MIDLINK|GRN
-	.byte	BOTLINK|GRN
+
+.include "movesubs.asm"
+
+missing	.byte	0		;
+state	.byte	MISSING		;static uint8_t state[16] = { MISSING,
+	.byte	TOPLINK|WHT	;                             TOPLINK|WHT,
+	.byte	MIDLINK|WHT	;                             MIDLINK|WHT,
+	.byte	BOTLINK|WHT	;                             BOTLINK|WHT,
+	.byte	TOPLINK|RED	;                             TOPLINK|RED,
+	.byte	MIDLINK|RED	;                             MIDLINK|RED,
+	.byte	MIDLINK|RED	;                             MIDLINK|RED,
+	.byte	BOTLINK|RED	;                             BOTLINK|RED,
+	.byte	TOPLINK|YEL	;                             TOPLINK|YEL,
+	.byte	MIDLINK|YEL	;                             MIDLINK|YEL,
+	.byte	MIDLINK|YEL	;                             MIDLINK|YEL,
+	.byte	BOTLINK|YEL	;                             BOTLINK|YEL,
+	.byte	TOPLINK|GRN	;                             TOPLINK|GRN,
+	.byte	MIDLINK|GRN	;                             MIDLINK|GRN,
+	.byte	MIDLINK|GRN	;                             MIDLINK|GRN,
+	.byte	BOTLINK|GRN	;                             BOTLINK|GRN };
 main
 .if !BASIC
 	lda	#$0f		;// P500 has to start in bank 15
 	sta	$01		;static volatile int execute_bank = 15;
 .endif
 	lda	#BACKGND	;void main(void) [
-	sta	BKGRNDC		; BKGRNDC = BACKGND
-	jsr	drawall		; drawall();
--	jsr	$ffe4		;
-	beq	-		;
-	rts			;
+	sta	BKGRNDC		; BKGRNDC = BACKGND;
+-	jsr	drawall		; do { drawall();
+	jsr	getmove		; getmove(); } while (1);
+	jmp	-		;}
+
 finish
 .end
