@@ -27,13 +27,23 @@ COPIED2	= $0400
 	.word	(+), 2055
 	.text	$99,$22,$1f,$09	; PRINT " CHR(31) CHR$(9) // BLU,enable
 	.text	$8e,$08,$93	; CHR$(142) CHR$(8) CHR$(19) // UPPER,disabl,clr
-	.text	$13,$13,$11	; second home undoes windows on C16, C128....
-	.text	$11,$11,$11,$11
-	.text	$11,$11,$11,$11
-	.text	$11,$11,$11,$11
-	.text	$11,$11,$11,$11
-	.text	$11,$11,$11,$11
-topline	.text	$9c,$12,"(",$92,","
+	.text	$13,$13,$22,$3b	; "; (second home undoes windows on C16,C128...)
+	.text	$3a,$81,$49,$b2	; : FOR I =
+	.text	$30,$a4,$33,$3a	; 0 TO 3 :
+	.text	$81,$4a,$b2,$31	; FOR J = 1
+	.text	$a4,$35,$3a,$99	; TO 5 : PRINT
+	.text	$ca,$28,$22,$d5	; MID$ ( " /
+	.text	$7d,$7d,$7d,$ca	; | | | \
+	.text	$22,$2c,$4a,$2c	; " , J ,
+	.text	$31,$29,$3b,$a6	; 1 ) ; SPC(
+	.text	format("%2d",SCREENW-2)
+	.text	$29,$3b,$ca,$28	; ) ; MID$ (
+	.text	$22,$c9,$7d,$7d	; " \ | |
+	.text	$7d,$cb,$22,$2c	; | / " ,
+	.text	$4a,$2c,$31,$29	; J , 1 )
+	.text	$3b,$3a,$82,$3a	; ; : NEXT :
+	.text	$82,$3a,$99,$22	; NEXT : PRINT "
+	.text	$9c,$12,"(",$92,","
 	.text	$12,")",$92,"top "
 	.text	$12,"<",$92,","
 	.text	$12,">",$92,"bot "
