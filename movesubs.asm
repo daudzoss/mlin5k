@@ -22,7 +22,6 @@ rndmove	lda	jumpvec		;void rndmove(void) {
 	ora	jumpvec		;
 	sta	jumpvec		;
 rndjump	jmp	(jumpvec)	;} // rndmove()
-
 shuffle	ldy	#<$100		;void shuffle(void) {
 -	dey			; for (auto uint9_t y = 256; y; y--)
 	tya			;
@@ -48,7 +47,6 @@ downby1	lda	state+0		;uint4_t downby1(void) {
 	lda	#$0f		;  missing = 15;
 +	sta	missing		; return missing & 0x7f;
 	rts			;} // downby1()
-
 upby1	lda	state+$0f	;uint4_t upby1(void) {
 	sta	state-1		; state[-1] = state[15]; // tempbot
 	ldy	#$10		;
@@ -79,8 +77,48 @@ allrght	jsr	upby1		;uint4_t allrght(void) { register uint4_t a;
 
 slideup	rts
 slidedn	rts
-topleft	rts
-toprght	rts
+
+rowmask	.byte	$03		;static const uint8_t rowmask = 0x03;
+topleft	lda	state+0		;uint4_t topleft(void) {
+	pha			; uint8_t temp = state[0];
+	lda	state+4		;
+	sta	state+0		; state[0] = state[4];
+	lda	state+8		;
+	sta	state+4		; state[4] = state[8];
+	lda	state+$c	;
+	sta	state+8		; state[8] = state[12];
+	pla			;
+	sta	state+$c	; state[12] = temp;
+	lda	missing		;
+	bit	rowmask		;
+	bne	+		; if (missing & rowmask == 0) {// missing in top
+	clc			;  missing -= 4;
+	adc	#$fc		;  if (missing < 0)
+	bpl	+		;   missing = 12;
+	lda	#$0c		; }
++	sta	missing		; return missing;
+	rts			;} // topleft()
+toprght	lda	state+$c	;uint4_t toprght(void) {
+	pha			; uint8_t temp = state[12];
+	lda	state+8		;
+	sta	state+$c	; state[12] = state[8];
+	lda	state+4		;
+	sta	state+8		; state[8] = state[4];
+	lda	state+0		;
+	sta	state+4		; state[4] = state[0];
+	pla			;
+	sta	state+0		; state[0] = temp;
+	lda	missing		;
+	bit	rowmask		;
+	bne	+		; if (missing & rowmask == 0) {// missing in top
+	clc			;
+	adc	#4		;  missing += 4;
+	cmp	#$10		;  if (missing > 15)
+	bcc	+		;   missing = 0;
+	lda	#0		; }
++	sta	missing		; return missing;
+	rts			;} // topright()
+
 botleft	rts
 botrght	rts
 
