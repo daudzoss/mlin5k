@@ -26,8 +26,8 @@ COPIED2	= $0400
 .endif
 	.word	(+), 2055
 	.text	$99,$22,$1f,$09	; PRINT " CHR(31) CHR$(9) // BLU,enable
-	.text	$8e,$08,$93	; CHR$(142) CHR$(8) CHR$(19) // UPPER,disabl,clr
-	.text	$13,$13,$22,$3b	; "; (second home undoes windows on C16,C128...)
+	.text	$8e,$08,$13,$13	; CHR$(142) CHR$(8) CHR$(19) // UPPER,disabl,clr
+	.text	$93,$22,$3b	; "; (second home undoes windows on C16,C128...)
 	.text	$3a,$81,$49,$b2	; : FOR I =
 	.text	$30,$a4,$33,$3a	; 0 TO 3 :
 	.text	$81,$4a,$b2,$31	; FOR J = 1
