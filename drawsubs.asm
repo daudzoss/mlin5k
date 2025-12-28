@@ -129,8 +129,8 @@ drawtil	sta	attrcod		;
 	beq	+		;   if (attrcod & 0xc0) { // not a MISSING tile
 	and	#$3f		;    attrcod &= 0x3f; // just the color in low 6
 	bit	bit5h		;
-	beq	alocsta		;    if (attrcod & 0x20) // for c16, sign-extend
-	ora	#$40		;     attrcod |= 0x40; // into low 7 bits
+	beq	alocsta		;    if (attrcod & 0x20) // for c16, move bit 6
+	eor	#$60		;     attrcod ^= 0x60; // into bit 7 for clarity
 alocsta	sta	$ffff		;    *attrloc++ = attrcod; // do tile foreground
 +	inc	alocsta+1	;   }
 	bne	dsymlda		;
