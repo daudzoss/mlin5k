@@ -25,68 +25,90 @@ COPIED2	= $0400
 +
 .endif
 .if SCREENW >= $28
-	.word	(+), 2054
+	.word	(+), 2052
 	.text	$86,$41,$24,$28	; DIM A $ (
 	.text	$32,$30,$29,$3a	; 2 0 ) :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$29,$b2,$22	; ) = "
+	.text	     " missing link is a"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$32	; A $ ( 2
 	.text	$29,$b2,$22	; ) = "
+	.text	     " mechanical puzzle"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$33	; A $ ( 3
 	.text	$29,$b2,$22	; ) = "
+	.text	     " invented in 1981"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$34	; A $ ( 4
 	.text	$29,$b2,$22	; ) = "
+	.text	     " by steven p. han-"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$35	; A $ ( 5
 	.text	$29,$b2,$22	; ) = "
+	.text	     " son and jeffrey"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$36	; A $ ( 6
 	.text	$29,$b2,$22	; ) = "
-	.text	$22,$3a		; " :
+	.text	     " d. breslow."
+	.text	$22,0		; "
++	.word	(+), 2053
 	.text	$41,$24,$28,$37	; A $ ( 7
 	.text	$29,$b2,$22	; ) = "
+	.text	     " the puzzle has"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$38	; A $ ( 8
 	.text	$29,$b2,$22	; ) = "
+	.text	     " four sides, each"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$39	; A $ ( 9
 	.text	$29,$b2,$22	; ) = "
+	.text	     " depicting a chain"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$30,$29,$b2,$22	; 0 ) = "
+	.text	     " of a different"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$31,$29,$b2,$22	; 1 ) = "
+	.text	     " color.  each side"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$32,$29,$b2,$22	; 2 ) = "
+	.text	     " contains four"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$33,$29,$b2,$22	; 3) = "
-	.text	$22,$3a		; " :
+	.text	     " tiles, except one"
+	.text	$22,0		; " :
++	.word	(+), 2054
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$34,$29,$b2,$22	; 4) = "
+	.text	     " which contains"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$35,$29,$b2,$22	; 5) = "
+	.text	     " three tiles and a"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$36,$29,$b2,$22	; 6) = "
+	.text	     " gap."
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$37,$29,$b2,$22	; 7) = "
+	.text	     " the two middle"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$38,$29,$b2,$22	; 8) = "
+	.text	     " rows cannot be"
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$31	; A $ ( 1
 	.text	$39,$29,$b2,$22	; 9) = "
+	.text	     " rotated."
 	.text	$22,$3a		; " :
 	.text	$41,$24,$28,$32	; A $ ( 2
 	.text	$30,$29,$b2,$22	; 0) = "
+	.text	     " - wikipedia entry"
 	.text	$22,0		; "
 
 +
