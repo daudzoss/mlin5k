@@ -66,6 +66,8 @@ COPIED2	= $0400
 .endif
 
 start
+.include "checksub.asm"
+
 .include "drawsubs.asm"
 
 .include "movesubs.asm"
@@ -96,9 +98,10 @@ main
 	lda	#BACKGND	;void main(void) [
 	sta	BKGRNDC		; BKGRNDC = BACKGND;
 	jsr	shuffle		; shuffle();
--	jsr	getmove		; do { getmove();
-	jsr	drawall		;      drawall(); } while (1);
-	jmp	-		;}
-
+-	jsr	getmove		; do {
+	jsr	drawall		;  getmove();
+	jsr	checkok		;  drawall();
+	beq	-		; } while (!checkok());
+	rts			;}
 finish
 .end
