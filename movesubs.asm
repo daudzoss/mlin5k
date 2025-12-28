@@ -195,6 +195,7 @@ botrght	lda	state+$f	;uint4_t botrght(void) {
 getmove	jsr	$ffe4		;int8_t getmove(void) {
 	beq	getmove		; switch (register char a = getchar()) {
 
+.if 0
 	cmp	#'['		; case '[':
 	beq	+		;
 	cmp	#':'		; case ':':
@@ -210,10 +211,17 @@ getmove	jsr	$ffe4		;int8_t getmove(void) {
 ;	cmp	#'1'		; case '1':
 	bne	++		;  return allrght(a);
 +	jmp	allrght		;
+.endif	
 
 +	cmp	#'i'		; case 'i':
 	beq	+		;
 	cmp	#'I'		; case 'I':
+.if 1
+	beq	+		;
+	cmp	#'w'		;
+	beq	+		;
+	cmp	#'W'		;
+.endif
 ;	beq	+		;
 ;	cmp	#'2'		; case '2':
 	bne	++		;  return slideup(a);
@@ -222,6 +230,12 @@ getmove	jsr	$ffe4		;int8_t getmove(void) {
 +	cmp	#'k'		; case 'k':
 	beq	+		;
 	cmp	#'K'		; case 'K':
+.if 1
+	beq	+		;
+	cmp	#'s'		;
+	beq	+		;
+	cmp	#'S'		;
+.endif
 ;	beq	+		;
 ;	cmp	#'3'		; case '3':
 	bne	++		;  return slidedn(a);
@@ -234,6 +248,12 @@ getmove	jsr	$ffe4		;int8_t getmove(void) {
 	cmp	#'u'		; case 'u':
 	beq	+		;
 	cmp	#'U'		; case 'U':
+.if 1
+	beq	+		;
+	cmp	#'q'		;
+	beq	+		;
+	cmp	#'Q'		;
+.endif
 ;	beq	+		;
 ;	cmp	#'4'		; case '4':
 	bne	++		;  return topleft(a);
@@ -246,6 +266,12 @@ getmove	jsr	$ffe4		;int8_t getmove(void) {
 	cmp	#'o'		; case 'o':
 	beq	+		;
 	cmp	#'O'		; case 'O':
+.if 1
+	beq	+		;
+	cmp	#'e'		;
+	beq	+		;
+	cmp	#'E'		;
+.endif
 ;	beq	+		;
 ;	cmp	#'5'		; case '5':
 	bne	++		;  return toprght(a);
@@ -258,6 +284,12 @@ getmove	jsr	$ffe4		;int8_t getmove(void) {
 	cmp	#'j'		; case 'j':
 	beq	+		;
 	cmp	#'J'		; case 'J':
+.if 1
+	beq	+		;
+	cmp	#'a'		;
+	beq	+		;
+	cmp	#'A'		;
+.endif
 ;	beq	+		;
 ;	cmp	#'6'		; case '6':
 	bne	++		;  return botleft(a);
@@ -270,6 +302,12 @@ getmove	jsr	$ffe4		;int8_t getmove(void) {
 	cmp	#'l'		; case 'l':
 	beq	+		;
 	cmp	#'L'		; case 'L':
+.if 1
+	beq	+		;
+	cmp	#'d'		;
+	beq	+		;
+	cmp	#'D'		;
+.endif
 ;	beq	+		;
 ;	cmp	#'7'		; case '7':
 	bne	++		;  return botrght(a);
