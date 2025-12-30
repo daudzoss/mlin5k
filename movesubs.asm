@@ -43,7 +43,12 @@ shuffle	ldy	#<$100		;void shuffle(void) {
 	pha			;
 	jsr	rndmove		;  rndmove();
 	jsr	drawall		;  drawall();
+	jsr	$ffe4		;
+	beq	+		;  if (/*key pressed*/) {
 	pla			;
+	lda	#0		;   break;
+	pha			;  }
++	pla			;
 	tay			;
 	bne	-		; }
 	rts			;} // shuffle()
