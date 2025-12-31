@@ -1,7 +1,5 @@
 missing	.byte	0		;static int4_t missing = 0;
 randnum	.byte	$55		;statig int8_t randnum = 0xbf;
-jumpvec	.fill	2		;static uint8_t (*jumpvec)(void);
-.align	16
 jumpto0	.word	allleft		;static uint8_t (*jumpto)(void)[8] = { allleft,
 jumpto1	.word	allrght		;                                      allright,
 jumpto2	.word	slideup		;                                      slideup,
@@ -10,6 +8,7 @@ jumpto4	.word	topleft		;                                      topleft,
 jumpto5	.word	toprght		;                                      toprght,
 jumpto6	.word	botleft		;                                      botleft,
 jumpto7	.word	botrght		;                                      botrght};
+
 rndmove	lda	RNDLOC1		;uint8_t rndmove(void) {
 	eor	RNDLOC2		;
 	asl			;
@@ -23,19 +22,10 @@ rndmove	lda	RNDLOC1		;uint8_t rndmove(void) {
 	sta	randnum		;
 	tay			; register uint3_t y = rand(8);
 	lda	jumpto0,y	;
-	sta	jumpvec		;
+	sta	jumpvec+1	;
 	lda	jumpto0+1,y	; jumpvec = jumpto[y];
-	sta	jumpvec+1	; return (*jumpvec)();
-.if 0
- tya
- lsr
- ora #$30
- sta SCREENM
-- jsr $ffe4
- cmp SCREENM
- bne -
-.endif
-	jmp	(jumpvec)	;} // rndmove()
+	sta	jumpvec+2	; return (*jumpvec)();
+jumpvec	jmp	$ffff		;} // rndmove()
 
 shuffle	ldy	#<$100		;void shuffle(void) {
 -	dey			; for (auto uint9_t y = 256; y; y--) {
