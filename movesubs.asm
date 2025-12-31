@@ -204,132 +204,136 @@ botrght	lda	state+$f	;uint4_t botrght(void) {
 ;;; codedupl
 +	rts			;} // botrght()
 
+ADDLKEY	:?= 0
+	
 getmove	jsr	$ffe4		;int8_t getmove(void) {
 	beq	getmove		; switch (register char a = getchar()) {
 
-.if 1
+.if ADDLKEY
 	cmp	#'['		; case '[':
 	beq	+		;
 	cmp	#':'		; case ':':
-;	beq	+		;
-;	cmp	#'0'		; case '0':
+	beq	+		;
+	cmp	#'0'		; case '0':
 	bne	++		;  return allleft(a);
 +	jmp	allleft		;
 
 +	cmp	#']'		; case ']':
 	beq	+		;
 	cmp	#$3b		; case ';':
-;	beq	+		;
-;	cmp	#'1'		; case '1':
+	beq	+		;
+	cmp	#'1'		; case '1':
 	bne	++		;  return allrght(a);
 +	jmp	allrght		;
-.endif	
+.else
+	and	#$ef		;
+.endif
 
 +	cmp	#'i'		; case 'i':
+.if ADDLKEY
 	beq	+		;
 	cmp	#'I'		; case 'I':
-.if 1
 	beq	+		;
-	cmp	#'w'		;
+	cmp	#'w'		; case 'w':
 	beq	+		;
-	cmp	#'W'		;
+	cmp	#'W'		; case 'W':
 	beq	+		;
-	cmp	#$91		;
+	cmp	#$91		; case CRSR_UP:
+	beq	+		;
+	cmp	#'2'		; case '2':
 .endif
-;	beq	+		;
-;	cmp	#'2'		; case '2':
 	bne	++		;  return slideup(a);
 +	jmp	slideup		;
 
 +	cmp	#'k'		; case 'k':
+.if ADDLKEY
 	beq	+		;
 	cmp	#'K'		; case 'K':
-.if 1
 	beq	+		;
-	cmp	#'s'		;
+	cmp	#'s'		; case 's':
 	beq	+		;
-	cmp	#'S'		;
+	cmp	#'S'		; case 'S':
 	beq	+		;
-	cmp	#$11		;
+	cmp	#$11		; case CRSR_DN:
+	beq	+		;
+	cmp	#'3'		; case '3':
 .endif
-;	beq	+		;
-;	cmp	#'3'		; case '3':
 	bne	++		;  return slidedn(a);
 +	jmp	slidedn		;
 	
 +	cmp	#'('		; case '(':
+.if ADDLKEY
 	beq	+		;
 	cmp	#'8'		; case '8':
 	beq	+		;
 	cmp	#'u'		; case 'u':
 	beq	+		;
 	cmp	#'U'		; case 'U':
-.if 1
 	beq	+		;
-	cmp	#'q'		;
+	cmp	#'q'		; case 'q':
 	beq	+		;
-	cmp	#'Q'		;
+	cmp	#'Q'		; case 'Q':
+	beq	+		;
+	cmp	#'4'		; case '4':
 .endif
-;	beq	+		;
-;	cmp	#'4'		; case '4':
 	bne	++		;  return topleft(a);
 +	jmp	topleft		;
 
 +	cmp	#')'		; case ')':
+.if ADDLKEY
 	beq	+		;
 	cmp	#'9'		; case '9':
 	beq	+		;
 	cmp	#'o'		; case 'o':
 	beq	+		;
 	cmp	#'O'		; case 'O':
-.if 1
 	beq	+		;
-	cmp	#'e'		;
+	cmp	#'e'		; case 'e':
 	beq	+		;
-	cmp	#'E'		;
+	cmp	#'E'		; case 'E':
+	beq	+		;
+	cmp	#'5'		; case '5':
 .endif
-;	beq	+		;
-;	cmp	#'5'		; case '5':
 	bne	++		;  return toprght(a);
 +	jmp	toprght		;
 
-+	cmp	#'<'		; case '<':
++	cmp	#','		; case ',':
+.if ADDLKEY
 	beq	+		;
-	cmp	#','		; case ',':
+	cmp	#'<'		; case '<':
 	beq	+		;
 	cmp	#'j'		; case 'j':
 	beq	+		;
 	cmp	#'J'		; case 'J':
-.if 1
 	beq	+		;
-	cmp	#'a'		;
+	cmp	#'a'		; case 'a':
 	beq	+		;
-	cmp	#'A'		;
+	cmp	#'A'		; case 'A':
 	beq	+		;
-	cmp	#$9d		;
+	cmp	#$9d		; case CRSR_LF:
+	beq	+		;
+	cmp	#'6'		; case '6':
 .endif
-;	beq	+		;
-;	cmp	#'6'		; case '6':
 	bne	++		;  return botleft(a);
 +	jmp	botleft		;
 
-+	cmp	#'>'		; case '>':
++	cmp	#'.'		; case '.':
+.if ADDLKEY
 	beq	+		;
-	cmp	#'.'		; case '.':
+	cmp	#'>'		; case '>':
 	beq	+		;
 	cmp	#'l'		; case 'l':
 	beq	+		;
 	cmp	#'L'		; case 'L':
-.if 1
 	beq	+		;
-	cmp	#'d'		;
+	cmp	#'d'		; case 'd':
 	beq	+		;
-	cmp	#'D'		;
+	cmp	#'D'		; case 'D':
 	beq	+		;
-	cmp	#$1d		;
+	cmp	#$1d		; case CRSR_RT:
+	beq	+		;
+	cmp	#'7'		; case '7':
 .endif
-;	beq	+		;
-;	cmp	#'7'		; case '7':
 	bne	++		;  return botrght(a);
 +	jmp	botrght		; }
 +	lda	#$ff		; return -1;
