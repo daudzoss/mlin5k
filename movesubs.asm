@@ -2,14 +2,14 @@ ADDLKEY	:?= 0
 	
 missing	.byte	0		;static int4_t missing = 0;
 randnum	.byte	$55		;statig int8_t randnum = 0xbf;
-jumpto0	.word	allleft		;static uint8_t (*jumpto)(void)[8] = { allleft,
-jumpto1	.word	allrght		;                                      allrght,
-jumpto2	.word	slideup		;                                      slideup,
-jumpto3	.word	slidedn		;                                      slidedn,
-jumpto4	.word	topleft		;                                      topleft,
-jumpto5	.word	toprght		;                                      toprght,
-jumpto6	.word	botleft		;                                      botleft,
-jumpto7	.word	botrght		;                                      botrght};
+jumpto0	.word	allleft		;static uint8_t (jumpto)[8](void) = { allleft,
+jumpto1	.word	allrght		;                                     allrght,
+jumpto2	.word	slideup		;                                     slideup,
+jumpto3	.word	slidedn		;                                     slidedn,
+jumpto4	.word	topleft		;                                     topleft,
+jumpto5	.word	toprght		;                                     toprght,
+jumpto6	.word	botleft		;                                     botleft,
+jumpto7	.word	botrght		;                                     botrght};
 
 rndmove	lda	RNDLOC1		;uint8_t rndmove(void) {
 	eor	RNDLOC2		;
@@ -25,7 +25,7 @@ rndmove	lda	RNDLOC1		;uint8_t rndmove(void) {
 	tay			; register uint3_t y = rand(8);
 	lda	jumpto0,y	;
 	sta	jumpvec+1	;
-	lda	jumpto0+1,y	; jumpvec = jumpto[y];
+	lda	jumpto0+1,y	; static uint8_t (jumpvec)(void) = jumpto[y];
 	sta	jumpvec+2	; return (*jumpvec)();
 jumpvec	jmp	$ffff		;} // rndmove()
 
