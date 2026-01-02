@@ -198,15 +198,19 @@ main
 	lda	#$0f		;// P500 has to start in bank 15
 	sta	$01		;static volatile int execute_bank = 15;
 .endif
-	lda	#BACKGND	;void main(void) [
+.if	BKGRNDC
+	lda	#BACKGND	;void main(void) {
 	sta	BKGRNDC		; BKGRNDC = BACKGND;
+.endif
 	jsr	shuffle		; shuffle();
+.if SCREENC
 	lda	SCREENC+SCREENW*SCREENH-2
 	sta	SCREENC+SCREENW*SCREENH-1
 	ldy	#SCREENW	;
 -	sta	SCREENC-1,y	;
 	dey			;
 	bne	-		;
+.endif
 	lda	#'b'-'@'	;
 	sta	SCREENM+SCREENW*SCREENH-1
 -	jsr	getmove		; do {
