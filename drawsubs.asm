@@ -49,8 +49,8 @@ symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
        .byte $20,$20,$20,$20,$20;
        .byte $20,$20,$20,$20
 clrblnd
-	.byte	$20
-	.byte	'w','r','c','p',g','b','y' ; // recycle pad bytes for 8 color symbols for NOCOLOR
+	.byte	$20,'w'-'@','r'-'@','c'-'@'
+	.byte	'p'-'@','g'-'@','b'-'@','y'-'@' ; // recycle pad bytes for 8 color symbols for NOCOLOR
 
 stampmid
 	.byte	SYM0900,$20,$20	;
