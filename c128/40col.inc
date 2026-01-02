@@ -1,5 +1,5 @@
 ZP	= $fb
-BASIC	= $0800
+BASIC	= $1c00
 BKGRNDC	= $d021
 RNDLOC1	= $d011
 RNDLOC2	= $d012
