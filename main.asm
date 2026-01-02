@@ -3,6 +3,8 @@ MIDLINK = 1<<6
 TOPLINK = 2<<6
 BOTLINK = 3<<6
 
+CAPTION :?= !SCREENC	; no screen color implies per-tile center caption
+
 .if BASIC
 *	= BASIC+1
 .else
@@ -198,15 +200,19 @@ main
 	lda	#$0f		;// P500 has to start in bank 15
 	sta	$01		;static volatile int execute_bank = 15;
 .endif
-	lda	#BACKGND	;void main(void) [
+.if	BKGRNDC
+	lda	#BACKGND	;void main(void) {
 	sta	BKGRNDC		; BKGRNDC = BACKGND;
+.endif
 	jsr	shuffle		; shuffle();
+.if SCREENC
 	lda	SCREENC+SCREENW*SCREENH-2
 	sta	SCREENC+SCREENW*SCREENH-1
 	ldy	#SCREENW	;
 -	sta	SCREENC-1,y	;
 	dey			;
 	bne	-		;
+.endif
 	lda	#'b'-'@'	;
 	sta	SCREENM+SCREENW*SCREENH-1
 -	jsr	getmove		; do {

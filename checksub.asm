@@ -16,7 +16,7 @@ checkc	.macro
 	ldy	#0		;uint1_t checkc(void) {
 -	lda	state,y		; for (register uint8_t y = 0; y < 16; y += 4) {
 	and	#$3f		;
-n	sta	tempchk		;  tempchk = state[y] & 0x3f; // color bits
+	sta	tempchk		;  tempchk = state[y] & 0x3f; // color bits
 	iny			;
 	lda	state,y		;
 	beq	+		;  if (state[y+1] == 0 ||

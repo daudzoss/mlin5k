@@ -47,10 +47,12 @@ symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
        .byte $20,$20,$20,$20,$20;
        .byte $20,$20,$20,$20,$20;
        .byte $20,$20,$20,$20,$20;
-       .byte $20,$20,$20,$20,$20;
-	.byte	0,0,0,0,0,0,0	;
+       .byte $20,$20,$20,$20
+clrblnd
+	.byte	$20,'w'-'@','r'-'@','c'-'@'
+	.byte	'p'-'@','g'-'@','b'-'@','y'-'@' ; // recycle pad bytes for 8 color symbols for NOCOLOR
 
-
+stampmid
 	.byte	SYM0900,$20,$20	;
 	.byte	$20,SYM0300	;
 	
@@ -70,7 +72,7 @@ symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
 	.byte	$20,SYM0300	;
 	.byte	0,0,0,0,0,0,0	;
 	
-
+stamptop
 	.byte	$20,$20,$20,$20	;
 	.byte	$20		;
 
@@ -89,7 +91,7 @@ symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
 	.byte	$20,SYM0300	;
 	.byte	0,0,0,0,0,0,0	;
 	
-
+stampbot
 	.byte	SYM0900,$20,$20	;
 	.byte	$20,SYM0300	;
 
@@ -109,7 +111,7 @@ symset .byte $20,$20,$20,$20,$20;static const symset[4][25] = { {
 	;.byte	0,0,0,0,0,0,0	;};
 count5i	.fill	1		;void drawtil(register uint8_t a) {
 count5j	.fill	1		; static uint8_t count5i, count5j;
-attrcod	.fill	1		; static char attrcod;
+attrcod	.fill	1		; static char attrcod = a;
 bits76h	= 	drawtil+4	;
 drawtil	sta	attrcod		;
 	and	#$c0		; static const norzset = 0xc0;
@@ -127,11 +129,23 @@ drawtil	sta	attrcod		;
 -	lda	attrcod		;
 	bit	bits76h		;
 	beq	+		;   if (attrcod & 0xc0) { // not a MISSING tile
-	and	#$3f		;    attrcod &= 0x3f; // just the color in low 6
+.if SCREENC
+	and	#$3f		;    a = attrcod & 0x3f; // just the color in low 6
 	bit	bit5h		;
-	beq	alocsta		;    if (attrcod & 0x20) // for c16, move bit 6
-	eor	#$60		;     attrcod ^= 0x60; // into bit 7 for clarity
-alocsta	sta	$ffff		;    *attrloc++ = attrcod; // do tile foreground
+	beq	alocsta		;    if (a & 0x20) // for c16, move bit 6
+	eor	#$60		;     a ^= 0x60; // into bit 7 for contrast
+alocsta	sta	$ffff		;    *attrloc++ = a; // do tile foreground
+.else
+alocsta	bit	$ffff
+.endif
+.if CAPTION
+	and	#$07		;    register uint8_t x = attrcod & 0x07;
+	tax		; // just the color index in low 3
+	lda	clrblnd,x	;    a = clrblnd[x]; // initial letter of the color
+	sta	stampmid+5*2+2	; symset[1][5*2+2] = a;
+	sta	stamptop+5*2+2	; symset[2][5*2+2] = a;
+	sta	stampbot+5*2+2	; symset[3][5*2+2] = a;
+.endif
 +	inc	alocsta+1	;   }
 	bne	dsymlda		;
 	inc	alocsta+2	;
@@ -182,6 +196,7 @@ drawcol	tya			;void drawcol(register uint8_t& y) { // 0|4|8|12
 	sec			;
 	adc	#<(SCREENC+SCREENW);
 	sta	attrloc		;
+
 	lda	#>SCREENC	;
 	;adc	#0
 	sta	1+attrloc	; attrloc = (char*) (SCREENC+SCREENW+1+(y/4)*5);
