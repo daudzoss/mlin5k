@@ -6,6 +6,10 @@ builds for VIC20 from 0x1000~0x13dd
 
 Requires the 64TASS assembler to build. Supports the following platforms already
 
+* PET 2001 and later 40-column PET/CBM models
+
+* PET/CBM 8032 and later 80-column models
+
 * unexpanded VIC-20 (with a reduced set of keyboard control options i.e. no WASD)
 
 * Commodore 64, SX-64
@@ -13,6 +17,8 @@ Requires the 64TASS assembler to build. Supports the following platforms already
 * Commodore Plus/4, 16 (suggest defining F1="(" F2=")" with KEY command)
 
 * Commodore P500, CBM 510 (with RAM installed in bank 15 beyond $0400 to $07ff for ADDLKEY options)
+
+* Commodore 128 in native, 40-column mode
 
 <img width="836" height="628" alt="vic20" src="https://github.com/user-attachments/assets/a84d212c-41f5-4b18-9ed4-d09ee1c2a3c9" />
 
