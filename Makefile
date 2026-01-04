@@ -1,4 +1,4 @@
-all : mlinkb_40col.prg mlinkb_80col.prg mlinkb_vic20.prg mlinkb_c64.prg mlinkb_p500.prg mlinkb_c16.prg mlinkb_c128.prg
+all : mlinkb_40col.prg mlinkb_80col.prg mlinkb_vic20.prg mlinkb_c64.prg mlinkb_b128.prg mlinkb_p500.prg mlinkb_c16.prg mlinkb_c128.prg
 
 mlinkb_40col.prg : main.asm checksub.asm drawsubs.asm movesubs.asm pet/40col.inc
 	64tass -a -DADDLKEY:=1 pet/40col.inc main.asm -L mlinkb_40col.lst -o mlinkb_40col.prg
@@ -13,7 +13,7 @@ mlinkb_c64.prg : main.asm checksub.asm drawsubs.asm movesubs.asm c64/header.inc
 	64tass -a -DADDLKEY:=1 c64/header.inc main.asm -L mlinkb_c64.lst -o mlinkb_c64.prg
 
 mlinkb_b128.prg : main.asm checksub.asm drawsubs.asm movesubs.asm b128/header.inc
-	64tass -a -DADDLKEY:=1 b128/header.inc main.asm -L mlinkb_b128.lst -o mlinkb_b128.prg
+	64tass -a b128/header.inc main.asm -L mlinkb_b128.lst -o mlinkb_b128.prg
 
 mlinkb_p500.prg : main.asm checksub.asm drawsubs.asm movesubs.asm p500/header.inc
 	64tass -a p500/header.inc main.asm -L mlinkb_p500.lst -o mlinkb_p500.prg
