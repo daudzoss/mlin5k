@@ -16,6 +16,8 @@ Requires the 64TASS assembler to build. Supports the following platforms already
 
 * Commodore Plus/4, 16 (suggest defining F1="(" F2=")" with KEY command)
 
+* Commodore 610, B128
+
 * Commodore P500, CBM 510 (with RAM installed in bank 15 beyond $0400 to $07ff for ADDLKEY options)
 
 * Commodore 128 in native, 40-column mode

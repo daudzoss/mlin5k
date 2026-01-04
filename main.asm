@@ -14,7 +14,11 @@ COPIED2	= $0400
 	.text	$81,$41,$b2,$30	; FOR A = 0
 	.text	$a4		; TO finish-start
 	.text	format("%4d",finish-start)
+.if SCREENC 			; p500 copies from bank 0 but b128/610 from 1
 	.text	$3a,$dc,$30	; : BANK 0
+.else	
+	.text	$3a,$dc,$31	; : BANK 1
+.endif	
 	.text	$3a,$42,$b2,$c2	; : B = PEEK
 	.text	$28		; ( start
 	.text	format("%2d",COPIED2)
@@ -130,14 +134,25 @@ CRSRDNS :?= 0
 	.text	$30,$a4,$33,$3a	; 0 TO 3 :
 	.text	$81,$4a,$b2,$31	; FOR J = 1
 	.text	$a4,$35,$3a,$99	; TO 5 : PRINT
-	.text	$ca,$28,$22,$cf	; MID$ ( " /
+	.text	$ca,$28,$22	; MID$ ( "
+.if SCREENC || BASIC
+	.text	$cf		; /
 	.text	$a5,$a5,$a5,$cc	; | | | \
+.else
+	.text	"     "
+.endif	
 	.text	$22,$2c,$4a,$2c	; " , J ,
 	.text	$31,$29,$3b,$a6	; 1 ) ; SPC(
 	.text	$32,$30		; 2 0
 	.text	$29,$3b,$ca,$28	; ) ; MID$ (
-	.text	$22,$d0,$a7,$a7	; " \ | |
-	.text	$a7,$ba,$22,$2c	; | / " ,
+	.text	$22		; "
+.if SCREENC || BASIC
+	.text	$d0,$a7,$a7	; \ | |
+	.text	$a7,$ba		; | /
+.else
+	.text	"     "
+.endif	
+	.text	$22,$2c		; " ,
 	.text	$4a,$2c,$31,$29	; J , 1 )
 	.text	$3b		; ;
 .if BASIC && (SCREENW >= $28)
