@@ -30,6 +30,7 @@ COPIED2	= $0400
 	.text	$3a,$82,0	; : NEXT
 +
 .endif
+
 .if BASIC && (SCREENW >= $28)
 	.word	(+), 2052
 	.text	$86,$41,$24,$28	; DIM A $ (
@@ -147,15 +148,20 @@ CRSRDNS :?= 0
 	.text	$22,$d0,$a7,$a7	; " \ | |
 	.text	$a7,$ba,$22,$2c	; | / " ,
 	.text	$4a,$2c,$31,$29	; J , 1 )
-.if BASIC && (SCREENW >= $28)
 	.text	$3b		; ;
+.if SCREENW >= $28
+.if BASIC
 	.text	$41,$24,$28,$49	; A $ ( I
 	.text	$ac,$35,$aa,$4a	; * 5 + J
 	.text	$29		; )
+.else
+	.text	$a6,format("%2d",SCREENW-22) ; SPC( 
+	.text	$29		; )
 .endif
 .if SCREENW == $28
-	.text	$3b		; ;
-.endif	
+	.text	$3b		;
+.endif
+.endif
 	.text	$3a,$82,$3a	; : NEXT :
 	.text	$82,$3a,$99,$22	; NEXT : PRINT "
 .if SCREENC
