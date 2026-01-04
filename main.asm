@@ -119,7 +119,11 @@ COPIED2	= $0400
 +
 .endif	
 	.word	(+), 2055
-	.text	$99,$22,$1f,$09	; PRINT " CHR(31) CHR$(9) // BLU,enable
+	.text	$99,$22		; PRINT "
+.if SCREENC
+	.text	$1f		; CHR$(31) // BLU
+.endif
+	.text	$09		; CHR$(9) // enable
 	.text	$8e,$08		; CHR$(142) CHR$(8) // UPPER,disabl
 .if SCREENW > $17
 	.text	$13,$13		; HOME HOME // (undoes windows on C16,C128,...)
@@ -134,27 +138,22 @@ CRSRDNS :?= 0
 	.text	$30,$a4,$33,$3a	; 0 TO 3 :
 	.text	$81,$4a,$b2,$31	; FOR J = 1
 	.text	$a4,$35,$3a,$99	; TO 5 : PRINT
-	.text	$ca,$28,$22	; MID$ ( "
-.if SCREENC || BASIC
-	.text	$cf		; /
+.if BASIC || SCREENC
+	.text	$ca,$28,$22,$cf	; MID$ ( " /
 	.text	$a5,$a5,$a5,$cc	; | | | \
-.else
-	.text	"     "
-.endif	
 	.text	$22,$2c,$4a,$2c	; " , J ,
 	.text	$31,$29,$3b,$a6	; 1 ) ; SPC(
 	.text	$32,$30		; 2 0
 	.text	$29,$3b,$ca,$28	; ) ; MID$ (
-	.text	$22		; "
-.if SCREENC || BASIC
-	.text	$d0,$a7,$a7	; \ | |
-	.text	$a7,$ba		; | /
-.else
-	.text	"     "
-.endif	
-	.text	$22,$2c		; " ,
+	.text	$22,$d0,$a7,$a7	; " \ | |
+	.text	$a7,$ba,$22,$2c	; | / " ,
 	.text	$4a,$2c,$31,$29	; J , 1 )
 	.text	$3b		; ;
+.else
+	.text	$a6,format("%2d",SCREENW-1)
+	.text	$29,$3b		; SPC( 7 9 ) ;
+.endif
+	
 .if BASIC && (SCREENW >= $28)
 	.text	$41,$24,$28,$49	; A $ ( I
 	.text	$ac,$35,$aa,$4a	; * 5 + J
@@ -165,7 +164,9 @@ CRSRDNS :?= 0
 .endif	
 	.text	$3a,$82,$3a	; : NEXT :
 	.text	$82,$3a,$99,$22	; NEXT : PRINT "
+.if SCREENC
 	.text	$9c		; PUR
+.endif
 	.text	$9c,$12,"(",$92,","
 	.text	$12,")",$92,"top "
 	.text	$12,"<",$92,","
@@ -180,7 +181,9 @@ CRSRDNS :?= 0
 	.text	format("%2d",SCREENW-$16)
 	.text	$29,$3b,$22	; ) ; "
 .endif
+.if SCREENC
 	.text	$1f		; BLU
+.endif
 	.text	"github:daudzoss/mlink"
 	.text	$13,$22,$3b	; HOME ";
 	.text	$3a,$9e		; : SYS main
