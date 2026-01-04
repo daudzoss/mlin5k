@@ -138,7 +138,6 @@ CRSRDNS :?= 0
 	.text	$30,$a4,$33,$3a	; 0 TO 3 :
 	.text	$81,$4a,$b2,$31	; FOR J = 1
 	.text	$a4,$35,$3a,$99	; TO 5 : PRINT
-.if BASIC || SCREENC
 	.text	$ca,$28,$22,$cf	; MID$ ( " /
 	.text	$a5,$a5,$a5,$cc	; | | | \
 	.text	$22,$2c,$4a,$2c	; " , J ,
@@ -148,19 +147,14 @@ CRSRDNS :?= 0
 	.text	$22,$d0,$a7,$a7	; " \ | |
 	.text	$a7,$ba,$22,$2c	; | / " ,
 	.text	$4a,$2c,$31,$29	; J , 1 )
-	.text	$3b		; ;
-.else
-	.text	$a6,format("%2d",SCREENW-1)
-	.text	$29,$3b		; SPC( 7 9 ) ;
-.endif
-	
 .if BASIC && (SCREENW >= $28)
+	.text	$3b		; ;
 	.text	$41,$24,$28,$49	; A $ ( I
 	.text	$ac,$35,$aa,$4a	; * 5 + J
 	.text	$29		; )
+.endif
 .if SCREENW == $28
 	.text	$3b		; ;
-.endif
 .endif	
 	.text	$3a,$82,$3a	; : NEXT :
 	.text	$82,$3a,$99,$22	; NEXT : PRINT "
