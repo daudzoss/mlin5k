@@ -244,4 +244,9 @@ main
 	beq	-		; } while (!checkok());
 	rts			;}
 finish
-.end
+.if !BASIC
+.if finish > COPIED2+$0400
+.warn "exceeded bank 15's low 1KB RAM available without expansion"	
+.endif
+.endif
+.end	
